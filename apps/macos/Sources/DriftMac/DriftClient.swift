@@ -259,7 +259,7 @@ final class DriftClient: ObservableObject {
 private let driftEventTapCallback: CGEventTapCallBack = { _, type, event, userInfo in
     guard let userInfo else { return Unmanaged.passUnretained(event) }
     let client = Unmanaged<DriftClient>.fromOpaque(userInfo).takeUnretainedValue()
-    return client.handleTap(type, event: event)
+    return MainActor.assumeIsolated { client.handleTap(type, event: event) }
 }
 
 private func macToVirtualKey(_ code: Int) -> Int {
