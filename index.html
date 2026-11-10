@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0e15" />
+    <title>Drift — One pointer. Every screen.</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#home" aria-label="Drift home">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
+          <span>drift</span>
+        </a>
+        <div class="workspace-picker">
+          <div class="workspace-avatar">S</div>
+          <div class="workspace-copy"><strong>Sam’s workspace</strong><small>Personal desk</small></div>
+          <span class="chevron">⌄</span>
+        </div>
+        <div class="nav-label">WORKSPACE</div>
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="desk"><span class="nav-icon">▦</span>Desk</button>
+          <button class="nav-item" data-view="devices"><span class="nav-icon">▣</span>Devices<span class="nav-count" id="nav-device-count">3</span></button>
+          <button class="nav-item" data-view="activity"><span class="nav-icon">◷</span>Activity</button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="connection-card">
+            <div class="connection-card-top"><span class="status-dot green"></span><strong>Your desk is private</strong></div>
+            <p>Devices connect directly over your local network.</p>
+            <a href="#privacy" data-open="privacy">How Drift connects <span>↗</span></a>
+          </div>
+          <button class="nav-item settings-link" data-view="settings"><span class="nav-icon">⚙</span>Settings</button>
+          <div class="profile-row"><div class="profile-avatar">S</div><div><strong>Sam Parker</strong><small>Personal plan</small></div><button class="more-btn" aria-label="Profile options">···</button></div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="home">
+        <header class="topbar">
+          <div class="breadcrumb"><span>Workspaces</span><b>/</b><strong>Personal desk</strong></div>
+          <div class="topbar-actions"><span class="secure-label"><span class="tiny-lock">◆</span> End-to-end encrypted</span><button class="icon-button" aria-label="Help">?</button><button class="avatar-small">S</button></div>
+        </header>
+
+        <section class="view active-view" id="desk-view">
+          <div class="page-heading">
+            <div><div class="eyebrow"><span class="live-indicator"></span> YOUR DESK <span class="eyebrow-divider">/</span> 3 DEVICES</div><h1>One pointer.<br /><span>Every screen.</span></h1><p class="heading-subtitle">Move your cursor to the edge. Drift takes it from there.</p></div>
+            <button class="button button-secondary" id="add-device-top"><span class="plus">＋</span> Add a device</button>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel map-panel">
+              <div class="panel-heading"><div><h2>Your screen map</h2><p>Drag screens to match your real desk.</p></div><button class="text-button" id="reset-layout">Reset layout <span>↻</span></button></div>
+              <div class="screen-map-wrap">
+                <div class="map-ruler"><span>LEFT</span><span>RIGHT</span></div>
+                <div class="screen-map" id="screen-map">
+                  <div class="device-screen device-mac" data-device="mac" tabindex="0" role="button" aria-label="MacBook Pro screen, connected">
+                    <div class="screen-top"><span class="screen-camera"></span><span class="screen-menu"><i></i><i></i><i></i></span><span class="screen-time">10:42</span></div>
+                    <div class="screen-content mac-content"><div class="wallpaper-orb orb-pink"></div><div class="wallpaper-orb orb-blue"></div><div class="dock"><i></i><i></i><i></i><i></i><i></i></div></div>
+                    <div class="device-label"><span class="platform-icon apple-icon">●</span><span><strong>MacBook Pro</strong><small>macOS · This desk</small></span><span class="online-pip"></span></div>
+                  </div>
+                  <div class="device-screen device-windows selected-device" data-device="windows" tabindex="0" role="button" aria-label="Windows PC, primary device">
+                    <div class="screen-top"><span class="screen-camera"></span><span class="screen-menu"><i></i><i></i><i></i></span><span class="screen-time">10:42</span></div>
+                    <div class="screen-content windows-content"><div class="win-glow"></div><div class="windows-logo"><i></i><i></i><i></i><i></i></div><div class="taskbar"><span>⊞</span><span>⌕</span><span>◧</span><span>◉</span></div></div>
+                    <div class="device-label"><span class="platform-icon windows-icon">⊞</span><span><strong>Windows PC</strong><small>Primary · This device</small></span><span class="online-pip"></span></div>
+                  </div>
+                  <div class="device-screen device-android" data-device="android" tabindex="0" role="button" aria-label="Pixel 8, connected">
+                    <div class="phone-screen-frame"><div class="phone-camera"></div><div class="phone-status"><span>10:42</span><span>◆ ▰</span></div><div class="phone-wallpaper"><div class="phone-glow"></div><span class="phone-date">Tuesday, Nov 10</span><strong>10:42</strong><div class="phone-apps"><i>◉</i><i>▣</i><i>◈</i><i>●</i></div><div class="phone-homebar"></div></div></div>
+                    <div class="device-label"><span class="platform-icon android-icon">◉</span><span><strong>Pixel 8</strong><small>Android · This desk</small></span><span class="online-pip"></span></div>
+                  </div>
+                  <div class="edge-hint edge-mac"><span class="edge-line"></span><span>Cross the edge</span></div>
+                  <div class="edge-hint edge-phone"><span class="edge-line"></span><span>Keep going</span></div>
+                  <div class="map-cursor" id="map-cursor"><span></span></div>
+                </div>
+              </div>
+              <div class="map-footer"><div class="map-legend"><span><i class="legend-dot"></i> Connected</span><span><i class="legend-dot primary-dot"></i> Primary</span></div><button class="try-edge" id="try-edge"><span class="cursor-icon">↗</span> Try edge switching <span class="arrow">→</span></button></div>
+            </section>
+
+            <section class="panel sharing-panel">
+              <div class="panel-heading"><div><h2>Share input</h2><p>Choose what flows across devices.</p></div><span class="sharing-badge" id="sharing-badge">PAUSED</span></div>
+              <div class="share-control-row"><div class="share-icon mouse-icon">⌖</div><div class="share-copy"><strong>Mouse &amp; trackpad</strong><small>Cursor, clicks, scrolling</small></div><button class="toggle" id="mouse-toggle" role="switch" aria-checked="false" aria-label="Share mouse and trackpad"><span></span></button></div>
+              <div class="share-control-row"><div class="share-icon keyboard-icon">⌨</div><div class="share-copy"><strong>Keyboard</strong><small>Typing and shortcuts</small></div><button class="toggle" id="keyboard-toggle" role="switch" aria-checked="false" aria-label="Share keyboard"><span></span></button></div>
+              <div class="share-note"><span class="note-icon">i</span><span>Your keyboard follows your pointer. Move back to your PC to return.</span></div>
+              <div class="share-divider"></div>
+              <div class="sharing-footer"><div class="host-row"><span class="host-device-icon" id="source-icon">⊞</span><span><small>INPUT SOURCE</small><strong id="source-label">This PC · Logitech MX Keys</strong></span></div><button class="mini-chevron" id="source-cycle" aria-label="Choose input source">⌄</button></div>
+              <div class="privacy-foot"><span>⌑</span> You’re always in control <button data-open="privacy">Privacy settings</button></div>
+            </section>
+          </div>
+
+          <section class="panel devices-panel">
+            <div class="panel-heading"><div><h2>Devices on your desk <span class="heading-count">3</span></h2><p>Ready to receive your mouse and keyboard.</p></div><button class="text-button" data-view="devices">Manage devices <span>→</span></button></div>
+            <div class="device-list">
+              <div class="device-row"><div class="device-product mac-product"><div class="laptop-glyph"><i></i><b></b></div></div><div class="device-info"><strong>MacBook Pro 14″</strong><small>macOS Sequoia <span class="middot">·</span> MacBook-Pro.local</small></div><span class="device-state"><i></i>Connected</span><span class="last-seen">Active now</span><button class="row-more" aria-label="MacBook options">···</button></div>
+              <div class="device-row"><div class="device-product phone-product"><div class="phone-glyph"><i></i></div></div><div class="device-info"><strong>Pixel 8</strong><small>Android 15 <span class="middot">·</span> Pixel-8.local</small></div><span class="device-state"><i></i>Connected</span><span class="last-seen">Active now</span><button class="row-more" aria-label="Pixel options">···</button></div>
+            </div>
+            <button class="add-device-row" id="add-device-row"><span>＋</span> Pair another device</button>
+          </section>
+
+          <footer class="page-footer"><span>Drift Preview <b>0.1</b></span><span>Built for your desk <span class="footer-heart">✳</span></span><button data-open="shortcuts">Keyboard shortcuts</button></footer>
+        </section>
+
+        <section class="view placeholder-view" id="devices-view"><div class="eyebrow">WORKSPACE / DEVICES</div><h1>Your devices,<br /><span>in one place.</span></h1><p class="heading-subtitle">Manage paired screens and decide where your pointer can travel.</p><div class="panel full-width-panel"><div class="panel-heading"><div><h2>Paired devices</h2><p>Only devices you approve can join this desk.</p></div><button class="button button-secondary" id="add-device-devices">＋ Add a device</button></div><div class="device-list expanded-list" id="expanded-device-list"></div></div></section>
+        <section class="view placeholder-view" id="activity-view"><div class="eyebrow">WORKSPACE / ACTIVITY</div><h1>Your desk,<br /><span>at a glance.</span></h1><p class="heading-subtitle">A private timeline of device connections and sharing sessions.</p><div class="panel full-width-panel activity-panel"><div class="panel-heading"><div><h2>Recent activity</h2><p>Stored locally on this device.</p></div><span class="sharing-badge">PRIVATE</span></div><div class="activity-entry"><span class="activity-icon connected-icon">↗</span><div><strong>Pixel 8 connected</strong><small>Today at 10:36 AM</small></div><span class="activity-status">Secure local connection</span></div><div class="activity-entry"><span class="activity-icon connected-icon">↗</span><div><strong>MacBook Pro connected</strong><small>Today at 10:32 AM</small></div><span class="activity-status">Secure local connection</span></div><div class="activity-entry"><span class="activity-icon paired-icon">＋</span><div><strong>Desk is ready</strong><small>Today at 10:30 AM</small></div><span class="activity-status">3 devices</span></div></div></section>
+        <section class="view placeholder-view" id="settings-view"><div class="eyebrow">WORKSPACE / SETTINGS</div><h1>Make Drift<br /><span>feel like yours.</span></h1><p class="heading-subtitle">Tune how your devices share one desk.</p><div class="panel full-width-panel settings-panel"><div class="setting-row"><div><strong>Edge switching</strong><small>Move the pointer across a screen edge to change devices.</small></div><button class="toggle on" id="settings-edge-toggle" role="switch" aria-checked="true"><span></span></button></div><div class="setting-row"><div><strong>Require a short edge hold</strong><small>Prevents accidental switching when you reach the edge.</small></div><button class="toggle" id="hold-toggle" role="switch" aria-checked="false"><span></span></button></div><div class="setting-row"><div><strong>Share clipboard</strong><small>Copy on one device and paste on another.</small></div><button class="toggle" id="clipboard-toggle" role="switch" aria-checked="false"><span></span></button></div><div class="setting-row"><div><strong>Launch Drift at sign-in</strong><small>Keep your desk ready when your computer starts.</small></div><button class="toggle on" role="switch" aria-checked="true"><span></span></button></div></div></section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="modal-backdrop" id="modal-backdrop" hidden>
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+        <div class="modal-mark" id="modal-mark">✦</div>
+        <div class="eyebrow modal-eyebrow" id="modal-eyebrow">ADD TO YOUR DESK</div>
+        <h2 id="modal-title">Bring another screen in.</h2>
+        <p class="modal-description" id="modal-description">Pair a nearby device and set it beside your PC. Your cursor will flow across the edge.</p>
+        <div class="pair-step" id="pair-step">
+          <label for="device-name">Give this device a name</label>
+          <input id="device-name" autocomplete="off" placeholder="e.g. Living room Mac" maxlength="32" />
+          <label for="device-type">Device type</label>
+          <div class="select-wrap"><select id="device-type"><option value="mac">Mac</option><option value="windows">Windows PC</option><option value="android">Android phone or tablet</option></select><span>⌄</span></div>
+          <div class="pair-code-card"><div class="qr-pattern" aria-hidden="true"></div><div><strong>Ready to pair</strong><small>Open Drift on your other device and scan this code, or enter <b id="pair-code">DRFT-42</b></small></div></div>
+          <button class="button button-primary modal-action" id="pair-confirm">Pair this device <span>→</span></button>
+          <p class="modal-footnote"><span>◆</span> Your device must be on the same trusted Wi-Fi network.</p>
+        </div>
+        <div class="info-step" id="info-step" hidden></div>
+      </section>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
