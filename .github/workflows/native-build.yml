@@ -41,6 +41,7 @@ jobs:
       - name: Build macOS app bundle
         shell: bash
         run: |
+          set +e
           build_log="$RUNNER_TEMP/drift-macos-build.log"
           bash apps/macos/build-macos.sh >"$build_log" 2>&1
           build_status=$?
