@@ -46,8 +46,8 @@ jobs:
           build_status=$?
           cat "$build_log"
           if [ "$build_status" -ne 0 ]; then
-            grep -E 'error:|warning:' "$build_log" | tail -n 12 | while IFS= read -r line; do
-              printf '::error title=Swift compiler::%s\n' "$line"
+            tail -n 20 "$build_log" | while IFS= read -r line; do
+              printf '::error::%s\n' "$line"
             done
             exit "$build_status"
           fi
