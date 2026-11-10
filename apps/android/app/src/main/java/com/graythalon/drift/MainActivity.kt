@@ -35,10 +35,10 @@ class MainActivity : Activity() {
         root.addView(label("DRIFT  /  ANDROID CLIENT", 0xFFC8F36A.toInt(), 12f, true))
         root.addView(label("One pointer. Every screen.", 0xFFF3F5F8.toInt(), 25f, true).apply { setPadding(0, 6, 0, 20) })
         root.addView(label("CONNECT TO YOUR WINDOWS HUB", 0xFF929BAA.toInt(), 11f, true))
-        host = EditText(this).apply { hint = "PC address, e.g. 192.168.1.25"; singleLine = true; setText(getPreferences(MODE_PRIVATE).getString("host", "")); setPadding(12, 10, 12, 10) }
+        host = EditText(this).apply { hint = "PC address, e.g. 192.168.1.25"; setSingleLine(true); setText(getPreferences(MODE_PRIVATE).getString("host", "")); setPadding(12, 10, 12, 10) }
         root.addView(host, marginParams())
         pairingCode = EditText(this).apply {
-            hint = "Pairing key"; singleLine = true; inputType = 0x00000081; setPadding(12, 10, 12, 10)
+            hint = "Pairing key"; setSingleLine(true); inputType = 0x00000081; setPadding(12, 10, 12, 10)
             DriftSecrets.load(this@MainActivity)?.let { setText(android.util.Base64.encodeToString(it, android.util.Base64.URL_SAFE or android.util.Base64.NO_PADDING or android.util.Base64.NO_WRAP)) }
         }
         root.addView(pairingCode, marginParams())

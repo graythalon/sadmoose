@@ -128,7 +128,7 @@ public partial class MainWindow : Window
 
     internal string? SelectedPeerId => (TargetPicker.SelectedItem as PairedPeer)?.PeerId;
 
-    private Task BroadcastSharingStateAsync() => _hub.BroadcastAsync(new { kind = "sharing", enabled = _sharing, mouse = _mouseSharing, keyboard = _keyboardSharing });
+    private Task BroadcastSharingStateAsync() => _hub.BroadcastAsync(JsonSerializer.SerializeToElement(new { kind = "sharing", enabled = _sharing, mouse = _mouseSharing, keyboard = _keyboardSharing }));
 
     private void DeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -151,8 +151,8 @@ public partial class MainWindow : Window
             TargetPicker.Items.Add(peer);
             EmptyDevices.Visibility = Visibility.Collapsed;
             StatusText.Text = $"Connected · {peer.DisplayName}";
-            _ = _hub.SendToPeerAsync(peer.PeerId, new { kind = "focus", target = _focusedPeerId ?? "windows", x = 0.02, y = 0.5 });
-            _ = _hub.SendToPeerAsync(peer.PeerId, new { kind = "sharing", enabled = _sharing, mouse = _mouseSharing, keyboard = _keyboardSharing });
+            _ = _hub.SendToPeerAsync(peer.PeerId, JsonSerializer.SerializeToElement(new { kind = "focus", target = _focusedPeerId ?? "windows", x = 0.02, y = 0.5 }));
+            _ = _hub.SendToPeerAsync(peer.PeerId, JsonSerializer.SerializeToElement(new { kind = "sharing", enabled = _sharing, mouse = _mouseSharing, keyboard = _keyboardSharing }));
         });
     }
 
