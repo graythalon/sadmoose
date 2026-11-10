@@ -26,8 +26,15 @@ jobs:
           path: artifacts/windows/
 
   macos:
-    name: macOS client
-    runs-on: macos-14
+    name: macOS client (${{ matrix.architecture }})
+    strategy:
+      matrix:
+        include:
+          - runner: macos-15
+            architecture: arm64
+          - runner: macos-15-intel
+            architecture: x64
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
       - name: Build macOS app bundle
@@ -36,7 +43,7 @@ jobs:
         run: ditto -c -k --sequesterRsrc --keepParent apps/macos/.build/Drift.app apps/macos/.build/Drift-macOS.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: Drift-macOS
+          name: Drift-macOS-${{ matrix.architecture }}
           path: apps/macos/.build/Drift-macOS.zip
 
   android:
@@ -48,7 +55,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4.0.4
       - name: Install Android SDK platform
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
       - uses: gradle/actions/setup-gradle@v4
