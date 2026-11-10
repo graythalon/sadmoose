@@ -6,8 +6,25 @@ desktop.ini
 # Editor files
 .vscode/
 .idea/
+.vs/
 *.swp
 *.swo
+
+# Native build output
+artifacts/
+**/bin/
+**/obj/
+**/.build/
+**/.gradle/
+**/build/
+local.properties
+*.apk
+*.aab
+*.dSYM/
+*.xcarchive/
+*.app/
+*.exe
+*.dll
 
 # Logs and temporary files
 *.log

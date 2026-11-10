@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>CFBundleExecutable</key><string>DriftMac</string>
+  <key>CFBundleIdentifier</key><string>com.graythalon.drift</string>
+  <key>CFBundleName</key><string>Drift</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleVersion</key><string>0.1.0</string>
+  <key>CFBundleShortVersionString</key><string>0.1.0</string>
+  <key>LSMinimumSystemVersion</key><string>14.0</string>
+  <key>NSHighResolutionCapable</key><true/>
+  <key>NSAppleEventsUsageDescription</key><string>Drift uses accessibility permissions to share keyboard and pointer input with your paired devices.</string>
+  <key>NSLocalNetworkUsageDescription</key><string>Drift connects to your paired Windows PC over your local network to share mouse and keyboard input.</string>
+</dict></plist>
