@@ -12,9 +12,9 @@ The EXE is currently unsigned, so Windows may show a SmartScreen prompt. Only ru
 
 ## Connect a device
 
-1. Open Drift on Windows. Select **Create pairing key** and approve the Windows firewall prompt for your private network.
+1. Open Drift on Windows. Select **Create key** and approve the Windows firewall prompt for your private network.
 2. On the paired device, enter the Windows PC's local IP address and the displayed key, then connect.
-3. In Drift, choose the device under **Input owner** and select **Start sharing**.
+3. In Drift, choose the device under **Send input to** and select **Start sharing**.
 4. Move the Windows pointer to a screen edge to enter the selected device. Move to an edge on that device to return control to Windows or continue to the next connected screen.
 
 The Android client is a separate APK. Find the latest **Drift-Android-debug** artifact in [GitHub Actions](https://github.com/graythalon/sadmoose/actions/workflows/native-build.yml). Android requires Drift's Accessibility Service to receive pointer gestures. To type into Android apps, enable Drift Keyboard and select it in Android settings. Turn on **Send this device's keyboard and mouse** to share peripherals attached to Android back through the Windows hub.
@@ -29,7 +29,7 @@ The release is a self-contained, compressed single-file publish. To build it fro
 dotnet publish apps/windows/Drift.Windows.csproj -c Release -r win-x64 --self-contained true -p:DebugType=None -p:DebugSymbols=false -o artifacts/windows
 ```
 
-The resulting app is `artifacts/windows/Drift.exe`. GitHub Actions builds and attaches this EXE to version tags such as `v0.1.0`; regular builds are available as downloadable workflow artifacts.
+The resulting app is `artifacts/windows/Drift.exe`. GitHub Actions builds and attaches this EXE to version tags such as `v0.1.1`; regular builds are available as downloadable workflow artifacts.
 
 ## Android build
 

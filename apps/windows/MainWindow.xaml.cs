@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Drift.Protocol;
 
 namespace Drift.Windows;
@@ -35,10 +36,12 @@ public partial class MainWindow : Window
         {
             _hub.SetPairingCode(_pairingCode);
             _hub.Start();
-            PairCode.Text = $"Pairing key: {_pairingCode}";
+            PairCode.Text = _pairingCode;
             CopyCodeButton.IsEnabled = true;
-            StatusText.Text = "Ready to connect · sharing paused";
+            CreateCodeButton.Content = "Rotate key";
         }
+        RefreshStatus();
+        RefreshDeviceSummary();
         WindowsInputAdapter.Current = new WindowsInputAdapter();
         WindowsInputAdapter.Current.EventCaptured += OnLocalInput;
         Closing += OnClosing;
@@ -49,7 +52,7 @@ public partial class MainWindow : Window
         IPAddress? address;
         try { address = Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(a)); }
         catch (SocketException) { address = null; }
-        HostAddress.Text = $"Host address: {address?.ToString() ?? "No local IPv4 address"}  ·  port 42857";
+        HostAddress.Text = address?.ToString() ?? "No local address";
     }
 
     private void CreateCode_Click(object sender, RoutedEventArgs e)
@@ -57,11 +60,12 @@ public partial class MainWindow : Window
         if (MessageBox.Show("Create a local pairing key? Anyone who has this key and your PC address can connect until you rotate it.", "Create pairing key", MessageBoxButton.OKCancel, MessageBoxImage.Information) != MessageBoxResult.OK) return;
         _pairingCode = SecureJsonConnection.NewPairingCode();
         WindowsSecretStore.Save(_pairingCode);
-        PairCode.Text = $"Pairing key: {_pairingCode}";
+        PairCode.Text = _pairingCode;
         CopyCodeButton.IsEnabled = true;
+        CreateCodeButton.Content = "Rotate key";
         _hub.SetPairingCode(_pairingCode);
         _hub.Start();
-        StatusText.Text = "Ready to pair · sharing paused";
+        RefreshStatus();
     }
 
     private void CopyCode_Click(object sender, RoutedEventArgs e)
@@ -95,7 +99,7 @@ public partial class MainWindow : Window
         _ = BroadcastSharingStateAsync();
         if (_sharing) _ = _hub.BroadcastAsync(new { kind = "focus", target = _focusedPeerId ?? "windows", x = _focusedPeerId is null ? 0.5 : 0.02, y = 0.5 });
         StartSharingButton.Content = _sharing ? "Pause sharing" : "Start sharing";
-        StatusText.Text = _sharing ? "Sharing is on" : "Sharing paused";
+        RefreshStatus();
     }
 
     private void SharingChanged(object sender, RoutedEventArgs e)
@@ -132,8 +136,29 @@ public partial class MainWindow : Window
 
     private void DeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        EmptyDevices.Visibility = _peers.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        RefreshDeviceSummary();
         DisconnectDeviceButton.IsEnabled = DeviceList.SelectedItem is PairedPeer;
+    }
+
+    private void RefreshDeviceSummary()
+    {
+        if (DeviceCountText is null || EmptyDevices is null) return;
+        DeviceCountText.Text = _peers.Count.ToString();
+        EmptyDevices.Visibility = _peers.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void RefreshStatus()
+    {
+        if (StatusText is null || StatusDot is null) return;
+        var (label, color) = _sharing
+            ? ("Sharing", "#C8F36A")
+            : _peers.Count > 0
+                ? ("Connected", "#78C8FF")
+                : _pairingCode is not null
+                    ? ("Ready", "#C8F36A")
+                    : ("Paused", "#707C8D");
+        StatusText.Text = label;
+        StatusDot.Fill = (Brush)new BrushConverter().ConvertFromString(color)!;
     }
 
     private void DisconnectDevice_Click(object sender, RoutedEventArgs e)
@@ -149,8 +174,8 @@ public partial class MainWindow : Window
             if (previous is not null) { _peers.Remove(previous); TargetPicker.Items.Remove(previous); }
             _peers.Add(peer);
             TargetPicker.Items.Add(peer);
-            EmptyDevices.Visibility = Visibility.Collapsed;
-            StatusText.Text = $"Connected · {peer.DisplayName}";
+            RefreshDeviceSummary();
+            RefreshStatus();
             _ = _hub.SendToPeerAsync(peer.PeerId, JsonSerializer.SerializeToElement(new { kind = "focus", target = _focusedPeerId ?? "windows", x = 0.02, y = 0.5 }));
             _ = _hub.SendToPeerAsync(peer.PeerId, JsonSerializer.SerializeToElement(new { kind = "sharing", enabled = _sharing, mouse = _mouseSharing, keyboard = _keyboardSharing }));
         });
@@ -164,7 +189,8 @@ public partial class MainWindow : Window
             if (_focusedPeerId == peerId) ChangeFocus(null);
             var peer = _peers.FirstOrDefault(p => p.PeerId == peerId);
             if (peer is not null) { _peers.Remove(peer); TargetPicker.Items.Remove(peer); }
-            EmptyDevices.Visibility = _peers.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            RefreshDeviceSummary();
+            RefreshStatus();
         });
     }
 

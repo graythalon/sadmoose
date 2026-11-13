@@ -1,14 +1,211 @@
-<Window x:Class="Drift.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Drift — Shared input" Height="680" Width="820" MinHeight="570" MinWidth="690" Background="#0C1017" Foreground="#F3F5F8" WindowStartupLocation="CenterScreen">
+<Window x:Class="Drift.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Drift" Height="690" Width="980" MinHeight="620" MinWidth="760"
+        Background="#0B0F14" Foreground="#F3F5F8" FontFamily="Segoe UI"
+        WindowStartupLocation="CenterScreen">
+  <Window.Resources>
+    <Style x:Key="Eyebrow" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="#8994A3"/>
+      <Setter Property="FontSize" Value="10"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    <Style x:Key="ActionButton" TargetType="Button">
+      <Setter Property="Padding" Value="16,11"/>
+      <Setter Property="Background" Value="#C8F36A"/>
+      <Setter Property="Foreground" Value="#12170A"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="10" Opacity="1">
+              <ContentPresenter Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                RecognizesAccessKey="True"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.88"/></Trigger>
+              <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.72"/></Trigger>
+              <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.38"/></Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="QuietButton" TargetType="Button" BasedOn="{StaticResource ActionButton}">
+      <Setter Property="Background" Value="#202733"/>
+      <Setter Property="Foreground" Value="#E5EAF1"/>
+    </Style>
+    <Style TargetType="ComboBox">
+      <Setter Property="Background" Value="#1A222D"/>
+      <Setter Property="Foreground" Value="#F3F5F8"/>
+      <Setter Property="BorderBrush" Value="#303A49"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Padding" Value="12,10"/>
+      <Setter Property="FontSize" Value="13"/>
+    </Style>
+    <Style TargetType="ComboBoxItem">
+      <Setter Property="Background" Value="#1A222D"/>
+      <Setter Property="Foreground" Value="#F3F5F8"/>
+      <Setter Property="Padding" Value="12,9"/>
+      <Style.Triggers>
+        <Trigger Property="IsHighlighted" Value="True"><Setter Property="Background" Value="#2A3442"/></Trigger>
+        <Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="#34402C"/></Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style TargetType="CheckBox">
+      <Setter Property="Foreground" Value="#E5EAF1"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="Margin" Value="0,7,0,7"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style TargetType="ListBox">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+    </Style>
+    <Style TargetType="ListBoxItem">
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="Margin" Value="0,0,0,8"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <Border x:Name="SelectionChrome" Background="{TemplateBinding Background}" CornerRadius="12">
+              <ContentPresenter/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsSelected" Value="True"><Setter TargetName="SelectionChrome" Property="Background" Value="#202A36"/></Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </Window.Resources>
+
   <Grid Margin="28">
-    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-    <DockPanel Grid.Row="0" Margin="0,0,0,22"><StackPanel><TextBlock Text="DRIFT  /  WINDOWS HUB" Foreground="#C8F36A" FontSize="10" FontWeight="Bold"/><TextBlock Text="One pointer. Every screen." FontSize="28" FontWeight="SemiBold" Margin="0,5,0,0"/></StackPanel><Border DockPanel.Dock="Right" Background="#1C242C" CornerRadius="8" Padding="10,7" VerticalAlignment="Center"><TextBlock x:Name="StatusText" Text="Sharing paused" Foreground="#AAB3C2"/></Border></DockPanel>
-    <Border Grid.Row="1" Background="#151B25" BorderBrush="#293241" BorderThickness="1" CornerRadius="10" Padding="18" Margin="0,0,0,14">
-      <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="This PC is your desk hub" FontSize="15" FontWeight="SemiBold"/><TextBlock Text="Devices join this trusted local network. Input stays paused until you start sharing." Foreground="#9AA3B2" Margin="0,5,0,12" TextWrapping="Wrap"/><TextBlock x:Name="HostAddress" Text="Host address: starting…" Foreground="#CDD3DE" FontSize="11"/><TextBlock x:Name="PairCode" Text="Pairing key: not created" Foreground="#CDD3DE" FontSize="11" FontFamily="Consolas" Margin="0,5,0,0"/></StackPanel><StackPanel Grid.Column="1" VerticalAlignment="Center"><Button x:Name="CreateCodeButton" Content="Create pairing key" Click="CreateCode_Click"/><Button x:Name="CopyCodeButton" Content="Copy key" Click="CopyCode_Click" IsEnabled="False"/></StackPanel></Grid>
-    </Border>
-    <Grid Grid.Row="2"><Grid.ColumnDefinitions><ColumnDefinition Width="1.1*"/><ColumnDefinition Width="14"/><ColumnDefinition Width=".9*"/></Grid.ColumnDefinitions>
-      <Border Grid.Column="0" Background="#121720" BorderBrush="#252D3A" BorderThickness="1" CornerRadius="10" Padding="18"><StackPanel><TextBlock Text="PAIRED DEVICES" Foreground="#919AAA" FontSize="10" FontWeight="Bold"/><TextBlock x:Name="EmptyDevices" Text="No devices connected yet.&#10;&#10;On a Mac or Android device, install Drift, enter this PC’s IP address and pairing key, then connect." Foreground="#A7AEBB" Margin="0,16,0,0" TextWrapping="Wrap"/><ListBox x:Name="DeviceList" Margin="0,10,0,0" Background="Transparent" BorderThickness="0" Foreground="#E8EBF1" DisplayMemberPath="DisplayName" SelectionChanged="DeviceList_SelectionChanged"/><Button x:Name="DisconnectDeviceButton" Content="Disconnect selected device" Click="DisconnectDevice_Click" IsEnabled="False" Margin="0,12,0,0"/></StackPanel></Border>
-      <Border Grid.Column="2" Background="#121720" BorderBrush="#252D3A" BorderThickness="1" CornerRadius="10" Padding="18"><StackPanel><TextBlock Text="INPUT SHARING" Foreground="#919AAA" FontSize="10" FontWeight="Bold"/><TextBlock Text="Input owner" FontWeight="SemiBold" Margin="0,16,0,4"/><ComboBox x:Name="TargetPicker" SelectionChanged="TargetPicker_SelectionChanged" Background="#202735" Foreground="#E8EBF1" Padding="6"/><TextBlock Text="Choose the device that should receive your PC mouse and keyboard. Connected devices can also send their attached mouse and keyboard back through this hub." Foreground="#959EAD" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,16"/><CheckBox x:Name="MouseSharing" Content="Share mouse and trackpad" Foreground="#E8EBF1" IsChecked="True" Checked="SharingChanged" Unchecked="SharingChanged" Margin="0,4"/><CheckBox x:Name="KeyboardSharing" Content="Share keyboard" Foreground="#E8EBF1" IsChecked="True" Checked="SharingChanged" Unchecked="SharingChanged" Margin="0,4"/><Button x:Name="StartSharingButton" Content="Start sharing" Click="StartSharing_Click" Margin="0,18,0,0"/><TextBlock Text="Emergency return: Ctrl + Alt + Shift + Backspace" Foreground="#8791A1" FontSize="10" TextWrapping="Wrap" Margin="0,10,0,0"/></StackPanel></Border>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Margin="0,0,0,20">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="48"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <Border Width="42" Height="42" CornerRadius="14" Background="#C8F36A" VerticalAlignment="Center">
+        <TextBlock Text="D" Foreground="#12170A" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+        <TextBlock Text="Drift" FontSize="23" FontWeight="SemiBold"/>
+        <TextBlock Text="One keyboard. Every screen." Foreground="#8994A3" FontSize="12" Margin="0,2,0,0"/>
+      </StackPanel>
+      <Border Grid.Column="2" Background="#151B23" BorderBrush="#27313D" BorderThickness="1" CornerRadius="18" Padding="12,8" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <Ellipse x:Name="StatusDot" Width="7" Height="7" Fill="#707C8D" Margin="0,0,8,0"/>
+          <TextBlock x:Name="StatusText" Text="Paused" Foreground="#C5CDD8" FontSize="12" FontWeight="SemiBold"/>
+        </StackPanel>
+      </Border>
     </Grid>
-    <TextBlock Grid.Row="3" Text="Only paired peers with the active key can connect. Pause or stop sharing here at any time." Foreground="#737D8D" FontSize="10" Margin="2,18,0,0"/>
+
+    <Border Grid.Row="1" Background="#121821" BorderBrush="#252E3A" BorderThickness="1" CornerRadius="16" Padding="20" Margin="0,0,0,16">
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="1.5*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <StackPanel VerticalAlignment="Center" Margin="0,0,18,0">
+          <TextBlock Text="THIS PC" Style="{StaticResource Eyebrow}"/>
+          <TextBlock x:Name="HostAddress" Text="Finding address…" FontSize="18" FontWeight="SemiBold" Margin="0,7,0,2"/>
+          <TextBlock x:Name="HostPort" Text="TCP · 42857" Foreground="#8994A3" FontSize="11"/>
+        </StackPanel>
+        <Border Grid.Column="1" Background="#0D1218" BorderBrush="#252E3A" BorderThickness="1" CornerRadius="12" Padding="14,11" Margin="0,0,16,0" VerticalAlignment="Center">
+          <StackPanel>
+            <TextBlock Text="PAIRING KEY" Style="{StaticResource Eyebrow}"/>
+            <TextBlock x:Name="PairCode" Text="Create a key to pair a device" Foreground="#E5EAF1" FontFamily="Consolas" FontSize="14" Margin="0,7,0,0" TextTrimming="CharacterEllipsis"/>
+          </StackPanel>
+        </Border>
+        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+          <Button x:Name="CreateCodeButton" Content="Create key" Style="{StaticResource ActionButton}" Click="CreateCode_Click"/>
+          <Button x:Name="CopyCodeButton" Content="Copy key" Style="{StaticResource QuietButton}" Click="CopyCode_Click" IsEnabled="False"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="2">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="1.08*"/><ColumnDefinition Width="16"/><ColumnDefinition Width=".92*"/></Grid.ColumnDefinitions>
+
+      <Border Grid.Column="0" Background="#111720" BorderBrush="#252E3A" BorderThickness="1" CornerRadius="16" Padding="20">
+        <Grid>
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <DockPanel Margin="0,0,0,16">
+            <Border DockPanel.Dock="Right" Background="#202733" CornerRadius="10" Padding="9,4" VerticalAlignment="Center">
+              <TextBlock x:Name="DeviceCountText" Text="0" Foreground="#BFC8D5" FontSize="11" FontWeight="SemiBold"/>
+            </Border>
+            <StackPanel>
+              <TextBlock Text="DEVICES" Style="{StaticResource Eyebrow}"/>
+              <TextBlock Text="Your screens" FontSize="18" FontWeight="SemiBold" Margin="0,4,0,0"/>
+            </StackPanel>
+          </DockPanel>
+          <Grid Grid.Row="1">
+            <StackPanel x:Name="EmptyDevices" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="18" Visibility="Visible">
+              <Border Width="46" Height="46" CornerRadius="16" Background="#1B232E" HorizontalAlignment="Center" Margin="0,0,0,14">
+                <TextBlock Text="＋" Foreground="#C8F36A" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              </Border>
+              <TextBlock Text="No devices yet" Foreground="#E5EAF1" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+              <TextBlock Text="Use the address and key above to connect a device." Foreground="#8994A3" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" Margin="0,6,0,0" MaxWidth="260"/>
+            </StackPanel>
+            <ListBox x:Name="DeviceList" SelectionChanged="DeviceList_SelectionChanged" VerticalContentAlignment="Top">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <Border Background="#171E28" CornerRadius="12" Padding="13,12">
+                    <DockPanel>
+                      <Ellipse Width="8" Height="8" Fill="#C8F36A" VerticalAlignment="Center" Margin="0,0,11,0"/>
+                      <StackPanel>
+                        <TextBlock Text="{Binding DisplayName}" Foreground="#F0F3F7" FontSize="13" FontWeight="SemiBold"/>
+                        <TextBlock Text="Connected" Foreground="#8994A3" FontSize="11" Margin="0,2,0,0"/>
+                      </StackPanel>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </Grid>
+          <Button x:Name="DisconnectDeviceButton" Grid.Row="2" Content="Disconnect selected" Style="{StaticResource QuietButton}" Click="DisconnectDevice_Click" IsEnabled="False" Margin="0,12,0,0" HorizontalAlignment="Left"/>
+        </Grid>
+      </Border>
+
+      <Border Grid.Column="2" Background="#111720" BorderBrush="#252E3A" BorderThickness="1" CornerRadius="16" Padding="20">
+        <Grid>
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <StackPanel Grid.Row="0" Margin="0,0,0,18">
+            <TextBlock Text="CONTROL" Style="{StaticResource Eyebrow}"/>
+            <TextBlock Text="Send input to" FontSize="18" FontWeight="SemiBold" Margin="0,4,0,0"/>
+          </StackPanel>
+          <ComboBox x:Name="TargetPicker" Grid.Row="1" SelectionChanged="TargetPicker_SelectionChanged"/>
+          <TextBlock Grid.Row="2" Text="Share from this PC" Foreground="#8994A3" FontSize="11" Margin="2,20,0,4"/>
+          <StackPanel Grid.Row="3" VerticalAlignment="Top">
+            <CheckBox x:Name="MouseSharing" Content="Mouse and trackpad" IsChecked="True" Checked="SharingChanged" Unchecked="SharingChanged"/>
+            <CheckBox x:Name="KeyboardSharing" Content="Keyboard" IsChecked="True" Checked="SharingChanged" Unchecked="SharingChanged"/>
+          </StackPanel>
+          <Button x:Name="StartSharingButton" Grid.Row="4" Content="Start sharing" Style="{StaticResource ActionButton}" Click="StartSharing_Click" Margin="0,8,0,0" HorizontalAlignment="Stretch"/>
+          <TextBlock Grid.Row="5" Text="You can pause sharing at any time." Foreground="#778393" FontSize="11" Margin="1,12,0,0"/>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <DockPanel Grid.Row="3" Margin="2,16,2,0">
+      <TextBlock Text="Private network · Encrypted connection" Foreground="#778393" FontSize="11" VerticalAlignment="Center"/>
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+        <TextBlock Text="Return to PC" Foreground="#778393" FontSize="11" VerticalAlignment="Center" Margin="0,0,8,0"/>
+        <Border Background="#171E28" BorderBrush="#2B3542" BorderThickness="1" CornerRadius="7" Padding="8,5">
+          <TextBlock Text="Ctrl  Alt  Shift  Backspace" Foreground="#B9C3D0" FontSize="10" FontFamily="Consolas"/>
+        </Border>
+      </StackPanel>
+    </DockPanel>
   </Grid>
 </Window>
