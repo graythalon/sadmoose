@@ -1,8 +1,9 @@
-name: Build native apps
+name: Build Drift for Windows and Android
 
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -19,48 +20,32 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - name: Publish Windows app
-        run: dotnet publish apps/windows/Drift.Windows.csproj -c Release -r win-x64 --self-contained true -o artifacts/windows
+        run: dotnet publish apps/windows/Drift.Windows.csproj -c Release -r win-x64 --self-contained true -p:DebugType=None -p:DebugSymbols=false -o artifacts/windows
       - uses: actions/upload-artifact@v4
         with:
           name: Drift-Windows-x64
-          path: artifacts/windows/
+          path: artifacts/windows/Drift.exe
 
-  macos:
-    name: macOS client (${{ matrix.architecture }})
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - runner: macos-15
-            architecture: arm64
-          - runner: macos-15-intel
-            architecture: x64
-    runs-on: ${{ matrix.runner }}
+  release:
+    name: Publish Windows release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: windows
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Build macOS app bundle
-        shell: bash
-        run: |
-          set +e
-          build_log="$RUNNER_TEMP/drift-macos-build.log"
-          bash apps/macos/build-macos.sh >"$build_log" 2>&1
-          build_status=$?
-          cat "$build_log"
-          if [ "$build_status" -ne 0 ]; then
-            tail -n 20 "$build_log" | while IFS= read -r line; do
-              printf '::error::%s\n' "$line"
-            done
-            exit "$build_status"
-          fi
-      - name: Archive app bundle
-        run: ditto -c -k --sequesterRsrc --keepParent apps/macos/.build/Drift.app apps/macos/.build/Drift-macOS.zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
-          name: Drift-macOS-${{ matrix.architecture }}
-          path: apps/macos/.build/Drift-macOS.zip
+          name: Drift-Windows-x64
+          path: release
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release/Drift.exe --repo "$GITHUB_REPOSITORY" --title "Drift $GITHUB_REF_NAME" --generate-notes
 
   android:
     name: Android client
+    if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
